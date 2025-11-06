@@ -40,11 +40,23 @@ export default function Home() {
             />
           </div>
 
-          <Filters />
+          <Filters category={category} setCategory={setCategory} 
+                    sortBy={sortBy} setSortBy={setSortBy}
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {products.filter((product) =>{
+              if(category && category != product.category) return false;
+              if(searchText && !product.title.toLowerCase().includes(searchText.toLowerCase())) return false;
+              return true;
+            })
+            .sort((a,b)=>{
+              if(sortBy==="price-desc") return b.price-a.price;
+              else return a.price-b.price;
+              //Precio por defecto de menor a mayor para comodidad
+            })
+          .map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
